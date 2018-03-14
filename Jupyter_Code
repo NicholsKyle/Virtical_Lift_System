@@ -1,0 +1,37 @@
+from pynq import Overlay
+Overlay("base.bit").download()
+from pynq.iop import Arduino_IO
+from pynq.iop import ARDUINO
+from pynq.board import Button
+
+
+# define O/P pins as outputs
+floor0 = Arduino_IO(ARDUINO, 8, 'out') # A0
+floor1 = Arduino_IO(ARDUINO, 9, 'out') # A1
+floor2 = Arduino_IO(ARDUINO, 10, 'out') # A2
+
+# define the buttons 
+btns = [Button(index) for index in range(4)]
+
+# while button 4 is low
+while(btns[3].read() == 0):
+    
+    # if button 0 goes high we want to go to floor 0
+    if(btns[0].read() == 1):
+        floor0.write(1)
+    
+    # if button 1 goes high we want to go to floor 1
+    if(btns[1].read() == 1):
+        floor1.write(1)
+        
+    # if button 3 goes high we want to go to floor 2    
+    if(btns[2].read() == 1):
+        floor2.write(1)
+    
+    # if no buttons are pressed, keep them all low
+    else:
+        floor0.write(0)
+        floor1.write(0)
+        floor2.write(0)
+       
+del btns
